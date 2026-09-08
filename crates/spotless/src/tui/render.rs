@@ -47,7 +47,7 @@ fn title(frame: &mut Frame, area: Rect, app: &App) {
     let (label, bytes) = match app.tab {
         Tab::Scan | Tab::Dev => ("selected", app.selected_bytes()),
         Tab::Apps => ("highlighted", app.selected_bytes()),
-        Tab::Trash => ("in the Trash", app.trash.bytes),
+        Tab::Trash => ("in the Trash", app.selected_bytes()),
     };
     let line = Line::from(vec![
         Span::styled(" Spotless ", Style::new().bold().fg(Color::Cyan)),
@@ -193,16 +193,15 @@ fn app_rows(app: &App, width: u16) -> Vec<ListItem<'_>> {
 }
 
 fn trash(frame: &mut Frame, area: Rect, app: &App) {
-    let text = if app.trash.items == 0 {
-        Text::from("The Trash is empty.")
-    } else {
-        Text::from(vec![
+    let text = match app.trash.as_ref() {
+        // Not measured yet. Saying "empty" here would be a lie the user has no
+        // way to tell from the truth.
+        None => Text::styled("Measuring...", Style::new().fg(Color::DarkGray)),
+        Some(trash) if trash.items == 0 => Text::from("The Trash is empty."),
+        Some(trash) => Text::from(vec![
             Line::from(vec![
-                Span::styled(ui::bytes(app.trash.bytes), Style::new().bold()),
-                Span::raw(format!(
-                    " in {}.",
-                    ui::count(app.trash.items, "item", "items")
-                )),
+                Span::styled(ui::bytes(trash.bytes), Style::new().bold()),
+                Span::raw(format!(" in {}.", ui::count(trash.items, "item", "items"))),
             ]),
             Line::raw(""),
             Line::styled(
@@ -214,7 +213,7 @@ fn trash(frame: &mut Frame, area: Rect, app: &App) {
                 Style::new().fg(Color::DarkGray),
             ),
             Line::styled("that part is permanent.", Style::new().fg(Color::DarkGray)),
-        ])
+        ]),
     };
     frame.render_widget(
         Paragraph::new(text).wrap(Wrap { trim: true }).block(
@@ -242,9 +241,8 @@ fn status(frame: &mut Frame, area: Rect, app: &App) {
 
 fn keys(tab: Tab) -> &'static str {
     match tab {
-        Tab::Scan | Tab::Dev => "· space select · a all · c clean · r rescan · tab switch · q quit",
-        Tab::Apps => "· u uninstall · r refresh · tab switch · q quit",
-        Tab::Trash => "· e empty · r refresh · tab switch · q quit",
+        Tab::Scan | Tab::Dev => "· a all · r rescan · tab switch · q quit",
+        Tab::Apps | Tab::Trash => "· r refresh · tab switch · q quit",
     }
 }
 

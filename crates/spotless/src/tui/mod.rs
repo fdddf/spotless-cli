@@ -89,7 +89,11 @@ pub struct App {
     scan: Vec<Row<TargetScan>>,
     dev: Vec<Row<DevArtifact>>,
     apps: Vec<AppInfo>,
-    trash: TrashSummary,
+    /// `None` until the Trash has actually been measured. Distinguishing
+    /// that from a measured-and-empty Trash is the difference between the tab
+    /// saying "measuring" and it asserting, wrongly, that there is nothing
+    /// there.
+    trash: Option<TrashSummary>,
     cursor: [usize; 4],
     /// The worker's latest progress line, and the fact that one is running.
     busy: Option<String>,
@@ -119,7 +123,7 @@ impl App {
             scan: Vec::new(),
             dev: Vec::new(),
             apps: Vec::new(),
-            trash: TrashSummary::default(),
+            trash: None,
             cursor: [0; 4],
             busy: None,
             status: String::from("Scanning…"),
@@ -169,7 +173,7 @@ impl App {
                     .collect();
                 rows.sort_by_key(|r| std::cmp::Reverse(r.item.total_bytes));
                 self.scan = rows;
-                self.finish("Space to select, c to clean.");
+                self.finish("space selects · c cleans");
             }
             Msg::DevDone(artifacts) => {
                 self.dev = artifacts
@@ -179,15 +183,15 @@ impl App {
                         selected: false,
                     })
                     .collect();
-                self.finish("Space to select, c to clean.");
+                self.finish("space selects · c cleans");
             }
             Msg::AppsDone(apps) => {
                 self.apps = apps;
-                self.finish("u to uninstall the highlighted app.");
+                self.finish("u uninstalls the highlighted app");
             }
             Msg::TrashDone(summary) => {
-                self.trash = summary;
-                self.finish("e to empty the Trash.");
+                self.trash = Some(summary);
+                self.finish("e empties the Trash");
             }
             Msg::Finished(line) => {
                 self.finish(&line);
@@ -247,7 +251,7 @@ impl App {
             Tab::Scan => self.scan.is_empty(),
             Tab::Dev => self.dev.is_empty(),
             Tab::Apps => self.apps.is_empty(),
-            Tab::Trash => self.trash.items == 0 && self.trash.bytes == 0,
+            Tab::Trash => self.trash.is_none(),
         };
         if empty && self.busy.is_none() {
             self.refresh();
@@ -334,7 +338,7 @@ impl App {
                 .get(self.cursor())
                 .and_then(|a| a.size_bytes)
                 .unwrap_or(0),
-            Tab::Trash => self.trash.bytes,
+            Tab::Trash => self.trash.as_ref().map_or(0, |t| t.bytes),
         }
     }
 
@@ -463,13 +467,18 @@ impl App {
     }
 
     fn ask_empty(&mut self) {
-        if self.tab != Tab::Trash || self.trash.items == 0 {
+        if self.tab != Tab::Trash {
             return;
         }
+        // Nothing measured yet, or nothing there: either way there is no
+        // question worth asking.
+        let Some(trash) = self.trash.as_ref().filter(|t| t.items > 0) else {
+            return;
+        };
         self.confirm = Some(Confirm {
             question: format!(
                 "Permanently delete {} in the Trash? This cannot be undone.",
-                crate::ui::bytes(self.trash.bytes)
+                crate::ui::bytes(trash.bytes)
             ),
             action: Action::EmptyTrash,
         });

@@ -5,6 +5,10 @@ caches, developer build artifacts, duplicate files, and the support files apps
 leave behind — with an interactive TUI, JSON output for scripts, and a cleaning
 ruleset you can read.
 
+![Spotless, scanning and then asking before it removes anything](docs/demo.gif)
+
+Or from the shell, when you want a number rather than a UI:
+
 ```
 $ spotless scan
 
@@ -149,7 +153,8 @@ project can receive.
 ## Relationship to the Spotless app
 
 This is the open-source core and terminal front end of
-[Spotless](https://mzjpg.com), a macOS app. The engine — scanning, the ruleset,
+[Spotless](https://mzjpg.com/products/spotless/), a macOS app
+([App Store](https://apps.apple.com/app/id6792317631)). The engine — scanning, the ruleset,
 the safety guard, the cleaner, the developer scan, duplicates, disk usage, the
 uninstaller — is the same code and lives here, under the GPL. The paid app adds
 a graphical disk visualizer, live system monitoring, scheduled reminders and the
@@ -169,6 +174,15 @@ here expires or asks for a licence.
 cargo test --workspace      # 110+ tests, all offline
 cargo clippy --workspace --all-targets
 cargo fmt -p spotless       # the CLI crate only — see below
+```
+
+The README's demo is recorded, not filmed: `scripts/record-demo.py` drives the
+TUI through a pty on a fixed script of keystrokes, so re-recording it after a UI
+change is two commands and the GIF never drifts from what the program does.
+
+```bash
+python3 scripts/record-demo.py docs/demo.cast
+agg --speed 1.6 --idle-time-limit 1 --theme asciinema docs/demo.cast docs/demo.gif
 ```
 
 `crates/spotless-core` is vendored from the Spotless app's core crate by

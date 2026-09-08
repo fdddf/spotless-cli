@@ -11,6 +11,10 @@ permissions:
 jobs:
   build:
     runs-on: macos-14
+    env:
+      # `secrets` cannot be referenced from a step's `if:`, but it can be from
+      # the job's `env`, so the signing steps test this instead.
+      HAS_SIGNING: ${{ secrets.APPLE_CERTIFICATE != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -42,7 +46,7 @@ jobs:
       # quarantine flag, so an unsigned binary installed that way runs — but one
       # downloaded through a browser does not, and that is the case this fixes.
       - name: Sign
-        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        if: env.HAS_SIGNING == 'true'
         env:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
@@ -66,7 +70,7 @@ jobs:
           codesign --verify --strict --verbose=2 dist/spotless
 
       - name: Notarize
-        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        if: env.HAS_SIGNING == 'true'
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}

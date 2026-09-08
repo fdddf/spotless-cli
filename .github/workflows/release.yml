@@ -37,6 +37,51 @@ jobs:
           lipo -info dist/spotless
           dist/spotless --version
 
+      # Signing is optional: a fork without the secrets still produces a working
+      # release, it just ships an unsigned binary. `curl | tar` never applies a
+      # quarantine flag, so an unsigned binary installed that way runs — but one
+      # downloaded through a browser does not, and that is the case this fixes.
+      - name: Sign
+        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+        run: |
+          keychain="$RUNNER_TEMP/build.keychain"
+          password="$(uuidgen)"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 900 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          echo "$APPLE_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security import "$RUNNER_TEMP/cert.p12" -k "$keychain" \
+            -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$password" "$keychain" >/dev/null
+          security list-keychain -d user -s "$keychain" login.keychain
+          rm "$RUNNER_TEMP/cert.p12"
+
+          codesign --force --timestamp --options runtime \
+            --sign "$APPLE_SIGNING_IDENTITY" dist/spotless
+          codesign --verify --strict --verbose=2 dist/spotless
+
+      - name: Notarize
+        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          # notarytool takes an archive, and a ticket cannot be stapled to a
+          # bare Mach-O executable (only to a .app, .dmg or .pkg). The ticket is
+          # published to Apple all the same, so Gatekeeper's online check passes.
+          ditto -c -k --keepParent dist/spotless "$RUNNER_TEMP/notarize.zip"
+          xcrun notarytool submit "$RUNNER_TEMP/notarize.zip" \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" \
+            --wait
+
       - name: Package
         run: |
           cd dist

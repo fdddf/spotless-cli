@@ -1,0 +1,443 @@
+# Developer-junk targets — Spotless's headline differentiator.
+#
+# These accumulate to many gigabytes and are all safely regenerable: build
+# systems and package managers re-download or rebuild on demand.
+
+[[target]]
+id = "xcode-derived-data"
+name = "Xcode DerivedData"
+path = "~/Library/Developer/Xcode/DerivedData"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Xcode build intermediates and indexes. Rebuilt on next build."
+
+[[target]]
+id = "xcode-archives"
+name = "Xcode Archives"
+path = "~/Library/Developer/Xcode/Archives"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Archived app builds. Remove only if you don't need to re-submit."
+
+[[target]]
+id = "xcode-device-support"
+name = "Xcode iOS DeviceSupport"
+path = "~/Library/Developer/Xcode/iOS DeviceSupport"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Per-iOS-version symbol caches. Regenerated when you attach a device."
+
+[[target]]
+id = "xcode-watchos-device-support"
+name = "Xcode watchOS DeviceSupport"
+path = "~/Library/Developer/Xcode/watchOS DeviceSupport"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Per-watchOS-version symbol caches. Regenerated when you attach a device."
+
+[[target]]
+id = "xcode-tvos-device-support"
+name = "Xcode tvOS DeviceSupport"
+path = "~/Library/Developer/Xcode/tvOS DeviceSupport"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Per-tvOS-version symbol caches. Regenerated when you attach a device."
+
+[[target]]
+id = "xctest-devices"
+name = "XCTest runner devices"
+path = "~/Library/Developer/XCTestDevices"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Simulator clones Xcode spins up to run tests. Recreated on the next test run."
+
+[[target]]
+id = "xcode-dvt-downloads"
+name = "Xcode downloaded components"
+path = "~/Library/Developer/DVTDownloads"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Simulator runtimes and toolchains Xcode downloaded. Re-fetched on demand."
+
+[[target]]
+id = "xcode-products"
+name = "Xcode build products"
+path = "~/Library/Developer/Xcode/Products"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Exported build products. Rebuilt on your next build or export."
+
+[[target]]
+id = "coresimulator-devices-caches"
+name = "Simulator device caches"
+path = "~/Library/Developer/CoreSimulator/Caches/dyld"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Shared dyld caches for the simulators. Rebuilt on next launch."
+
+[[target]]
+id = "coresimulator-caches"
+name = "CoreSimulator caches"
+path = "~/Library/Developer/CoreSimulator/Caches"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Simulator runtime caches. Safe to clear."
+
+[[target]]
+id = "npm-cache"
+name = "npm cache"
+path = "~/.npm/_cacache"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "npm package tarball cache. npm re-downloads as needed."
+
+[[target]]
+id = "yarn-cache"
+name = "Yarn cache"
+path = "~/Library/Caches/Yarn"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Yarn Classic package cache."
+
+[[target]]
+id = "gradle-cache"
+name = "Gradle cache"
+path = "~/.gradle/caches"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Gradle build cache and downloaded dependencies."
+
+[[target]]
+id = "cargo-registry-cache"
+name = "Cargo registry cache"
+path = "~/.cargo/registry/cache"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Downloaded crate archives. Cargo re-fetches on demand."
+
+[[target]]
+id = "pnpm-store"
+name = "pnpm store"
+path = "~/Library/pnpm/store"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "pnpm content-addressable package store. Re-fetched on demand."
+
+[[target]]
+id = "bun-cache"
+name = "Bun install cache"
+path = "~/.bun/install/cache"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Bun package cache. Re-downloaded as needed."
+
+[[target]]
+id = "cocoapods-cache"
+name = "CocoaPods cache"
+path = "~/Library/Caches/CocoaPods"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Downloaded pod specs and archives. Restored on `pod install`."
+
+[[target]]
+id = "homebrew-cache"
+name = "Homebrew cache"
+path = "~/Library/Caches/Homebrew"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Downloaded bottles and formulae. `brew` re-downloads as needed."
+
+[[target]]
+id = "pip-cache"
+name = "pip cache"
+path = "~/Library/Caches/pip"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "pip wheel/download cache. Re-fetched on demand."
+
+[[target]]
+id = "deno-cache"
+name = "Deno cache"
+path = "~/Library/Caches/deno"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Deno module and dependency cache. Re-fetched on demand."
+
+[[target]]
+id = "go-build-cache"
+name = "Go build cache"
+path = "~/Library/Caches/go-build"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Go compiler build cache. Rebuilt on next build."
+
+[[target]]
+id = "xdg-cache"
+name = "Tool cache (~/.cache)"
+path = "~/.cache"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Shared cache for CLI tools and SDKs (pip, uv, Playwright, HF). Re-created on demand."
+
+[[target]]
+id = "maven-repository"
+name = "Maven repository cache"
+path = "~/.m2/repository"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Downloaded Maven artifacts. Re-fetched on your next build."
+
+# Package-manager mirrors: the local copies of everything a toolchain has ever
+# downloaded. Each one re-fetches on demand, and each grows without bound —
+# nothing ever evicts an old version.
+
+[[target]]
+id = "go-module-cache"
+name = "Go module cache"
+path = "~/go/pkg/mod"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Every Go module ever downloaded, all versions. Re-fetched on your next build."
+
+[[target]]
+id = "npx-cache"
+name = "npx cache"
+path = "~/.npm/_npx"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Packages npx downloaded to run once. Re-fetched on demand."
+
+[[target]]
+id = "npm-logs"
+name = "npm logs"
+path = "~/.npm/_logs"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "npm debug logs from failed installs. Safe to clear."
+
+[[target]]
+id = "yarn-berry-cache"
+name = "Yarn Berry cache"
+path = "~/.yarn/berry/cache"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Yarn 2+ zipped package cache. Restored with `yarn install`."
+
+[[target]]
+id = "cargo-registry-src"
+name = "Cargo registry sources"
+path = "~/.cargo/registry/src"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Crate sources unpacked from the registry cache. Re-extracted on next build."
+
+[[target]]
+id = "cargo-git-checkouts"
+name = "Cargo git checkouts"
+path = "~/.cargo/git/checkouts"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Working copies of git dependencies. Re-cloned on next build."
+
+[[target]]
+id = "rustup-downloads"
+name = "rustup downloads"
+path = "~/.rustup/downloads"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Toolchain archives rustup kept after installing. Re-fetched if needed."
+
+[[target]]
+id = "gradle-wrapper-dists"
+name = "Gradle distributions"
+path = "~/.gradle/wrapper/dists"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Gradle versions the wrapper downloaded, one per project. Re-downloaded on next build."
+
+[[target]]
+id = "pub-cache"
+name = "Dart/Flutter package cache"
+path = "~/.pub-cache"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Downloaded Dart and Flutter packages. Restored with `flutter pub get`."
+
+[[target]]
+id = "nuget-packages"
+name = "NuGet package cache"
+path = "~/.nuget/packages"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Downloaded .NET packages, all versions. Re-fetched on your next restore."
+
+[[target]]
+id = "composer-cache"
+name = "Composer cache"
+path = "~/.composer/cache"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Downloaded PHP packages. Re-fetched on `composer install`."
+
+[[target]]
+id = "conda-packages"
+name = "Conda package cache"
+path = "~/.conda/pkgs"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Downloaded and unpacked conda packages. Re-fetched when an environment needs them."
+
+[[target]]
+id = "nvm-cache"
+name = "nvm download cache"
+path = "~/.nvm/.cache"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Node.js archives nvm kept after installing. Re-downloaded if needed."
+
+# Emulator, container and VM images — the largest single files most developer
+# machines carry, and the hardest to find by hand.
+
+[[target]]
+id = "android-system-images"
+name = "Android system images"
+path = "~/Library/Android/sdk/system-images"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Emulator system images, several GB per API level. Re-downloadable from the SDK Manager."
+
+[[target]]
+id = "android-avd"
+name = "Android emulator devices"
+path = "~/.android/avd"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Virtual devices and their disk images, including whatever you installed on them. Recreate in Device Manager."
+
+[[target]]
+id = "android-sdk-cache"
+name = "Android SDK download cache"
+path = "~/.android/cache"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "SDK Manager download cache. Re-fetched on demand."
+
+[[target]]
+id = "vagrant-boxes"
+name = "Vagrant boxes"
+path = "~/.vagrant.d/boxes"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Downloaded base box images. Re-downloaded on the next `vagrant up`."
+
+[[target]]
+id = "docker-desktop-logs"
+name = "Docker Desktop logs"
+path = "~/Library/Containers/com.docker.docker/Data/log"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Docker Desktop diagnostic logs. Safe to clear."
+
+# The container/VM disks below are `expert`: each one *is* the local image
+# store, so removing it is the same as running `docker system prune -a` plus
+# losing every volume. They are never selected by default, and the engine has to
+# be stopped first or it will write the file back out as it exits.
+
+[[target]]
+id = "docker-vm-disk"
+name = "Docker Desktop disk image"
+path = "~/Library/Containers/com.docker.docker/Data/vms"
+scope = "contents"
+safety = "expert"
+category = "developer"
+requires_app_quit = true
+description = "Docker's virtual disk — every local image, container and volume. Quit Docker first; it restarts empty."
+
+[[target]]
+id = "orbstack-vm-disk"
+name = "OrbStack disk image"
+path = "~/.orbstack/data"
+scope = "contents"
+safety = "expert"
+category = "developer"
+requires_app_quit = true
+description = "OrbStack's virtual disk — every local image, container and volume. Quit OrbStack first."
+
+[[target]]
+id = "colima-vm-disk"
+name = "Colima virtual machines"
+path = "~/.colima"
+scope = "contents"
+safety = "expert"
+category = "developer"
+requires_app_quit = true
+description = "Colima VMs with all their images and containers. Run `colima stop` first; recreate with `colima start`."
+
+[[target]]
+id = "podman-machine"
+name = "Podman machine images"
+path = "~/.local/share/containers/podman/machine"
+scope = "contents"
+safety = "expert"
+category = "developer"
+requires_app_quit = true
+description = "Podman machine disks with all local images and containers. Recreate with `podman machine init`."
+
+[[target]]
+id = "ollama-models"
+name = "Ollama models"
+path = "~/.ollama/models"
+scope = "contents"
+safety = "caution"
+category = "developer"
+description = "Downloaded local LLM weights, often several GB each. Re-pulled with `ollama pull`."
+
+[[target]]
+id = "xcode-documentation-cache"
+name = "Xcode documentation cache"
+path = "~/Library/Developer/Xcode/DocumentationCache"
+scope = "contents"
+safety = "safe"
+category = "developer"
+description = "Downloaded developer documentation. Re-fetched when you browse it again."

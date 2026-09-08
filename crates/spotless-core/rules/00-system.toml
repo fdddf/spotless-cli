@@ -1,0 +1,76 @@
+# System & user junk cleaning targets.
+#
+# Every entry here is a promise about what Spotless may remove. Keep the list
+# conservative: prefer caches, logs, and regenerable data. Anything that could
+# hold user data belongs in a higher safety tier (or not here at all).
+
+[[target]]
+id = "user-caches"
+name = "User application caches"
+path = "~/Library/Caches"
+scope = "contents"
+safety = "safe"
+category = "user-cache"
+requires_app_quit = true
+description = "Per-app caches. Apps rebuild these on next launch."
+
+[[target]]
+id = "user-logs"
+name = "User application logs"
+path = "~/Library/Logs"
+scope = "contents"
+safety = "safe"
+category = "logs"
+description = "Diagnostic logs written by apps. Safe to clear."
+
+[[target]]
+id = "crash-reports"
+name = "Crash reports"
+path = "~/Library/Application Support/CrashReporter"
+scope = "contents"
+safety = "safe"
+category = "logs"
+description = "Saved crash reports. Not needed for normal use."
+
+[[target]]
+id = "saved-app-state"
+name = "Saved application state"
+path = "~/Library/Saved Application State"
+scope = "contents"
+safety = "caution"
+category = "system-junk"
+requires_app_quit = true
+description = "Window/restore state. Clearing forgets reopened windows."
+
+# The only target outside the user's home. The sandbox cannot reach it however
+# the user is asked, so `requires` drops this rule entirely from the App Store
+# build rather than letting it fail at clean time.
+[[target]]
+id = "system-caches"
+name = "Shared system caches"
+path = "/Library/Caches"
+scope = "contents"
+safety = "caution"
+category = "system-junk"
+requires = "system-caches"
+description = "Machine-wide caches. Requires Full Disk Access to clean."
+
+# The Trash is the one target that cannot be moved to the Trash — re-trashing an
+# item just shuffles it inside the same folder. `permanent = true` routes it to
+# a real delete, whatever the user's move-vs-delete preference says, and marks
+# it in the UI so the difference is stated rather than assumed.
+#
+# It holds whatever the user put there, not junk this app identified, so it is
+# `caution` and never selected by default.
+[[target]]
+id = "trash"
+name = "Trash"
+path = "~/.Trash"
+# macOS keeps denying the Trash even under a home-folder grant, so the
+# sandboxed build cannot list it at all — see Capability::TrashContents.
+requires = "trash-contents"
+scope = "contents"
+safety = "caution"
+category = "trash"
+permanent = true
+description = "Items you already deleted. Emptying frees the space for good — check before you clean."

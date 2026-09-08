@@ -1,0 +1,37 @@
+[package]
+name = "spotless-core"
+description = "Scanning, cleaning rules, and safety guardrails for the Spotless macOS cleaner."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+keywords = ["macos", "cleaner", "disk", "cache"]
+categories = ["filesystem"]
+
+# Kept from the GUI build so the vendored modules copy over byte-for-byte (see
+# `scripts/sync-core.sh`). The CLI is always the unsandboxed `direct` variant;
+# `mas` exists only so `capability.rs` compiles unchanged.
+[features]
+default = ["direct"]
+direct = []
+mas = []
+
+[dependencies]
+serde = { workspace = true }
+toml = { workspace = true }
+walkdir = { workspace = true }
+dirs = { workspace = true }
+thiserror = { workspace = true }
+rayon = { workspace = true }
+# Reads .app Info.plist files, in both XML and binary formats.
+plist = "1"
+# `getuid` (per-volume Trash paths) and `getfsstat` (volume boundaries).
+libc = "0.2"
+
+[dev-dependencies]
+tempfile = "3"
+# Only the capability wire-format test needs it; the crate itself does not.
+serde_json = { workspace = true }

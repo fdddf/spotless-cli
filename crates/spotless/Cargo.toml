@@ -1,0 +1,28 @@
+[package]
+name = "spotless"
+description = "A fast, transparent macOS cleaner for the terminal — caches, developer junk, duplicates, and app leftovers."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+keywords = ["macos", "cleaner", "cli", "tui", "disk"]
+categories = ["command-line-utilities", "filesystem"]
+
+[[bin]]
+name = "spotless"
+path = "src/main.rs"
+
+[dependencies]
+spotless-core = { path = "../spotless-core", version = "0.1.0" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+clap = { version = "4", features = ["derive", "wrap_help"] }
+anyhow = "1"
+# The Trash, done the way Finder does it, so items come back with "Put Back".
+trash = "5"
+# Terminal UI.
+ratatui = "0.29"
+crossterm = "0.28"

@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build both architectures
+        run: |
+          cargo build --release -p spotless --target aarch64-apple-darwin
+          cargo build --release -p spotless --target x86_64-apple-darwin
+
+      - name: Make a universal binary
+        # One download that runs on every Mac, rather than asking people which
+        # chip they have.
+        run: |
+          mkdir -p dist
+          lipo -create -output dist/spotless \
+            target/aarch64-apple-darwin/release/spotless \
+            target/x86_64-apple-darwin/release/spotless
+          lipo -info dist/spotless
+          dist/spotless --version
+
+      - name: Package
+        run: |
+          cd dist
+          tar -czf spotless-macos-universal.tar.gz spotless
+          shasum -a 256 spotless-macos-universal.tar.gz > spotless-macos-universal.tar.gz.sha256
+          cat spotless-macos-universal.tar.gz.sha256
+
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/spotless-macos-universal.tar.gz
+            dist/spotless-macos-universal.tar.gz.sha256
+          generate_release_notes: true

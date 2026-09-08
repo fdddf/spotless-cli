@@ -15,6 +15,7 @@ jobs:
       # `secrets` cannot be referenced from a step's `if:`, but it can be from
       # the job's `env`, so the signing steps test this instead.
       HAS_SIGNING: ${{ secrets.APPLE_CERTIFICATE != '' }}
+      HAS_TAP_TOKEN: ${{ secrets.TAP_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v5
 
@@ -100,3 +101,29 @@ jobs:
             dist/spotless-macos-universal.tar.gz
             dist/spotless-macos-universal.tar.gz.sha256
           generate_release_notes: true
+
+      # The tap lives in another repository, which GITHUB_TOKEN cannot reach, so
+      # this needs a PAT with `contents: write` on fdddf/homebrew-tap. Without
+      # it the release still publishes and the formula is simply left to be
+      # bumped by hand.
+      - name: Update the Homebrew tap
+        if: env.HAS_TAP_TOKEN == 'true'
+        env:
+          TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          sha="$(cut -d' ' -f1 < dist/spotless-macos-universal.tar.gz.sha256)"
+          git clone --depth 1 \
+            "https://x-access-token:$TAP_TOKEN@github.com/fdddf/homebrew-tap.git" tap
+
+          python3 scripts/bump-formula.py tap/Formula/spotless.rb "$TAG" "$sha"
+
+          cd tap
+          if git diff --quiet; then
+            echo "formula already points at $TAG"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: spotless $TAG"
+          git push

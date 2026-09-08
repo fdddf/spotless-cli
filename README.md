@@ -44,16 +44,21 @@ opposite position:
 ## Install
 
 ```bash
-# One line, no toolchain required (universal: Apple Silicon + Intel)
+brew install fdddf/tap/spotless
+```
+
+No Homebrew? One line, no toolchain either way:
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/fdddf/spotless-cli/main/install.sh | sh
 ```
 
-The script downloads the signed universal binary from the latest release,
-checks it against the published SHA-256, and installs it to `/usr/local/bin`
-(or `~/.local/bin` if that is not writable). Read it first if you would rather
-not pipe a script into a shell — it is 80 lines of POSIX `sh`.
+That script downloads the universal binary from the latest release, checks it
+against the published SHA-256, and installs to `/usr/local/bin` (or
+`~/.local/bin` when that is not writable). Read it first if you would rather not
+pipe a script into a shell — it is 80 lines of POSIX `sh`.
 
-Prefer to do it by hand, or build it yourself:
+By hand, or from source:
 
 ```bash
 # Manual download

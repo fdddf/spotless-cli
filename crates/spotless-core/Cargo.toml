@@ -5,6 +5,9 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
+# Not a crates.io crate: it is a vendored copy that tracks the app's core, so a
+# version published here could only ever go stale against it.
+publish = false
 authors.workspace = true
 rust-version.workspace = true
 readme = "../../README.md"

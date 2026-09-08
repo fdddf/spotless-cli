@@ -45,6 +45,25 @@ than code:
 - **Prove the path.** Include, in the PR, where the path comes from — the tool's
   documentation, or the code that writes it.
 
+## Licensing of contributions
+
+This repository is **GPL-3.0-or-later**, and a contribution that touches only
+`crates/spotless` (the CLI and TUI) is simply that: GPL, like everything around
+it.
+
+`crates/spotless-core` is the exception, and it is worth being blunt about why.
+Those modules are also shipped inside the closed-source Spotless app, which
+their copyright holder dual-licenses; the GPL is a one-way door, so a patch
+offered only under the GPL would permanently fork the core in two and end the
+sync described above. **By opening a pull request that changes a file under
+`crates/spotless-core`, you agree that your change may also be distributed
+under a proprietary licence as part of that app.** You keep your copyright, and
+your change stays GPL here.
+
+If that is not something you want to grant, say so in the pull request — a bug
+report with a failing test, or a fix aimed at `crates/spotless`, is just as
+welcome and carries no such condition.
+
 ## Reporting a safety bug
 
 A path that gets removed and should not have been is the most serious kind of

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Spotless — a fast, transparent macOS cleaner for the terminal.
 //!
 //! The binary is a thin shell over [`spotless_core`]: it parses arguments,

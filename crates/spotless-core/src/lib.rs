@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! # spotless-core
 //!
 //! The pure-Rust heart of Spotless. It knows how to:

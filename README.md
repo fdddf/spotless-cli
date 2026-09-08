@@ -134,9 +134,14 @@ project can receive.
 This is the open-source core and terminal front end of
 [Spotless](https://mzjpg.com), a macOS app. The engine — scanning, the ruleset,
 the safety guard, the cleaner, the developer scan, duplicates, disk usage, the
-uninstaller — is the same code, MIT-licensed, and lives here. The paid app adds
+uninstaller — is the same code and lives here, under the GPL. The paid app adds
 a graphical disk visualizer, live system monitoring, scheduled reminders and the
 rest of its UI on top of it.
+
+Those shared modules are dual-licensed by their copyright holder: GPL-3.0 here,
+proprietary in the app. That is why a contribution touching `spotless-core`
+needs the grant described in [CONTRIBUTING.md](./CONTRIBUTING.md) — anything
+that lands only under the GPL can never be synced back.
 
 The CLI is not a demo or a crippled build: it is the whole engine, and nothing
 here expires or asks for a licence.
@@ -157,4 +162,11 @@ Fixes to the core modules are welcome here — the sync is how they travel back.
 
 ## License
 
-MIT. See [LICENSE](./LICENSE).
+Copyright © 2026 Spotless contributors.
+
+GNU General Public License v3.0 or later — see [LICENSE](./LICENSE). In short:
+you may use, study, change and share this, and anything you distribute that is
+built from it has to carry the same freedoms. Ship a fork, ship the source.
+
+Not published to crates.io; install from a release or with
+`cargo install --git`.
